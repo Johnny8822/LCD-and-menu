@@ -9,6 +9,31 @@
 #include "env.h" // Include your env.h file for WiFi credentials
 
 
+#define Peltier_1_CTRL 14 //This pin controls the Peltier Block 1, Turns on Fans 1 and 2 and Pump 1
+#define Peltier_2_CTRL 13 //This pin controls the Peltier Block 2, Turns on Fans 3 and 4 and Pump 2
+
+
+#define Peltier_1_FAN_1 27 //This pin controls the Fan 1 of Peltier Block 1
+#define Peltier_1_FAN_2 26 //This pin controls the Fan 2 of Peltier Block 1
+#define Peltier_2_FAN_3 25 //This pin controls the Pump 1 of Peltier Block 1
+#define Peltier_2_FAN_4 16 //This pin controls the Fan 3 of Peltier Block 2
+
+
+#define BUZZER_PIN 17   //Buzzer pin to turn off and on buzzer
+
+
+#define Red_LED 2       //RGB LED Red pin
+#define Green_LED 5     //RGB LED Green pin
+#define Blue_LED 12     //RGB LED Blue pin
+
+
+#define BUTTON_increase 36 //Button to increase the timer, tempearutre setpoint and scrolling 
+#define BUTTON_decrease 39 //Button to decrease the timer, tempearutre setpoint and scrolling
+#define BUTTON_select 34   //Button to select the temperature setpoint and scroll through the menu
+#define BUTTON_back 35     //Button to go back to the previous menu
+
+
+
 // --- LCD + DS18B20 Setup ---
 #define ONE_WIRE_BUS 4 
 #define TEMPERATURE_PRECISION 12
@@ -34,14 +59,23 @@ void setup() {
 
   // Connect to WiFi
   WiFi.begin(ssid, password);
+  lcd.setCursor(0,0);
   Serial.print("Connecting to WiFi...");
+  lcd.print("Connecting to WiFi...");
   while(WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
+  
   Serial.println("\nConnected to WiFi");
+  lcd.setCursor(0,1);
+  lcd.print("Connected to WiFi"); 
   Serial.print("IP: ");
-  Serial.println(WiFi.localIP());
+  lcd.setCursor(0,2); 
+  lcd.print("IP: ");
+  lcd.print(WiFi.localIP());
+  Serial.println(WiFi.localIP()); 
+  lcd.clear();
 }
 
 // --- Function to send temperature data to FastAPI ---
@@ -118,5 +152,5 @@ void loop() {
 
   sendTemperature(t1, t2, t3, t4);
 
-  delay(500); // wait 10 seconds before next reading
+  delay(100); // wait 500 milliseconds before next reading
 }
